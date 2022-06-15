@@ -16,6 +16,12 @@ namespace Application.Implementation
         {
             _repository = repository;
         }
+
+        public async Task<User> LoginAsync(string Email, string Password)
+        {
+            return await _repository.LoginAsync(Email, Password);
+        }
+
         public async Task<User> ValidateUserByEmail(string Email)
         {
             return await _repository.ValidateUserByEmail(Email);

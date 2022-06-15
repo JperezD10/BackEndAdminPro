@@ -14,6 +14,12 @@ namespace DataAccess.Implementation
         public UserDbContext(ApiDbContext context): base(context)
         {
         }
+
+        public async Task<User> LoginAsync(string Email, string Password)
+        {
+            return await _items.Where(x => x.Email == Email && x.Password == Password).FirstOrDefaultAsync();
+        }
+
         public async Task<User> ValidateUserByEmail(string Email)
         {
             return await _items.Where(x => x.Email == Email).FirstOrDefaultAsync();

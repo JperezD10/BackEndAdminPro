@@ -2,9 +2,11 @@
 using Application.Interfaces;
 using BackEndAdminPro.DTOs;
 using Entities;
+using Entities.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services;
+using Services.UserServices;
 
 namespace BackEndAdminPro.Controllers
 {
@@ -28,15 +30,8 @@ namespace BackEndAdminPro.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                User u = new User
-                {
-                    Name = user.Name,
-                    Email = user.Email,
-                    Password = EncriptadoService.ComputeSha256Hash(user.Password),
-                    Google = user.Google,
-                    Role = user.Role,
-                    Image = user.Image,
-                };
+                User u = UserService.ConvertDTO(user);
+
                 var userFound = await _userApplication.ValidateUserByEmail(u.Email);
                 if (userFound == null)
                 {
@@ -77,11 +72,10 @@ namespace BackEndAdminPro.Controllers
                 var emailFound = await _userApplication.ValidateUserByEmail(user.Email);
                 if (emailFound != null) return BadRequest("A user with that email already exists");
 
-                userFound.Password = EncriptadoService.ComputeSha256Hash(user.Password);
-                userFound.Name = user.Name;
-                userFound.Email = user.Email;
-                userFound.Role = user.Role;
-                userFound.Google = user.Google;
+                User userModified = UserService.ConvertDTO(user);
+
+                userFound = userModified;
+
                 await _userApplication.SaveAsync(userFound);
                 return Ok(userFound);
             }

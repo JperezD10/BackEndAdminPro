@@ -11,5 +11,6 @@ namespace DataAccess.Interfaces
     public interface IUserDbContext: IDbContext<User>
     {
         Task<User> ValidateUserByEmail(string Email);
+        Task<User> LoginAsync (string Email, string Password);
     }
 }

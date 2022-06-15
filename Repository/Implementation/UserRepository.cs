@@ -17,6 +17,12 @@ namespace Repository.Implementation
         {
             _context = context;
         }
+
+        public async Task<User> LoginAsync(string Email, string Password)
+        {
+            return await _context.LoginAsync(Email, Password);
+        }
+
         public async Task<User> ValidateUserByEmail(string Email)
         {
             return await _context.ValidateUserByEmail(Email);

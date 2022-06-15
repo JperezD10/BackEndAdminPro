@@ -11,5 +11,6 @@ namespace Repository.Interfaces
     {
         Task<User> ValidateUserByEmail(string Email);
 
+        Task<User> LoginAsync(string Email, string Password);
     }
 }

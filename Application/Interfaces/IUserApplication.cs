@@ -10,5 +10,6 @@ namespace Application.Interfaces
     public interface IUserApplication: IApplication<User>
     {
         Task<User> ValidateUserByEmail(string Email);
+        Task<User> LoginAsync(string Email, string Password);
     }
 }
