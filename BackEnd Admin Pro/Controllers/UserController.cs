@@ -49,11 +49,15 @@ namespace BackEndAdminPro.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUsers(int from)
         {
             try
             {
-                return Ok(await _userApplication.GetAllAsync());
+                var users = await _userApplication.GetAllAsync();
+                int total = users.Count();
+                var usersFiltered = users.Skip(from-1).Take(5).ToList();
+                UserResponseDTO response = new UserResponseDTO() { users = usersFiltered, totalUsers = total };
+                return Ok(response);
             }
             catch (Exception ex)
             {
