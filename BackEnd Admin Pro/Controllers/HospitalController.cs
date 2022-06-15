@@ -71,5 +71,28 @@ namespace BackEndAdminPro.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> PostHospital(HospitalDTO dto)
+        {
+            try
+            {
+                var hospitalExists = (await _hospitalApplication.GetAllAsync()).Where(h => h.Name == dto.Name).Any();
+                if (hospitalExists) return NotFound("Hospital already exists");
+
+                var user = await _userApplication.GetByIdAsync(dto.User);
+                if (user == null) return NotFound("User doesn't exists");
+
+                var Hospital = HospitalService.convertDTO(dto, user);
+
+                await _hospitalApplication.SaveAsync(Hospital);
+
+                return Ok("Hospital created");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
