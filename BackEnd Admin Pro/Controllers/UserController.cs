@@ -1,8 +1,9 @@
 ﻿using Application;
 using Application.Interfaces;
-using BackEndAdminPro.DTOs;
 using Entities;
 using Entities.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services;
@@ -10,6 +11,7 @@ using Services.UserServices;
 
 namespace BackEndAdminPro.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
