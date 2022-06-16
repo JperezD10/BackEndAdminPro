@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Entities.DTOs
 {
-    public class LoginResponseDTO
+    public class UserCreatedResponseDTO
     {
         public string Token { get; set; }
-        public bool Login { get; set; }
-        public string Error { get; set; }
+        public User user { get; set; }
     }
 }

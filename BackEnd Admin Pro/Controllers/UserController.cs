@@ -23,31 +23,6 @@ namespace BackEndAdminPro.Controllers
             _userApplication = userApplication;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] UserDTO user)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-                User u = UserService.ConvertDTO(user);
-
-                var userFound = await _userApplication.ValidateUserByEmail(u.Email);
-                if (userFound == null)
-                {
-                    var created = await _userApplication.SaveAsync(u);
-                    return Ok(created);
-                }
-                return BadRequest("User already exists");
-            }
-            catch (Exception ex )
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetAllUsers(int from)
         {
@@ -99,7 +74,7 @@ namespace BackEndAdminPro.Controllers
             {
                 if (id == 0) return BadRequest("Incorrect Id");
 
-                if (await _userApplication.GetByIdAsync(id) != null) return BadRequest("The user doesn't exists");
+                if (await _userApplication.GetByIdAsync(id) == null) return BadRequest("The user doesn't exists");
 
                 await _userApplication.DeleteAsync(id);
                 return Ok("User deleted");
