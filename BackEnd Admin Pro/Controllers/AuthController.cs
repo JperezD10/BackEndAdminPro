@@ -2,6 +2,8 @@
 using BackEndAdminPro.Configuration;
 using Entities;
 using Entities.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services;
@@ -89,6 +91,13 @@ namespace BackEndAdminPro.Controllers
                 Login = true,
                 Token = jwtToken,
             });
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet]
+        public IActionResult verifyToken()
+        {
+            return Ok(true);
         }
     }
 }
