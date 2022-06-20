@@ -17,7 +17,7 @@ namespace BackEndAdminPro.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserApplication _userApplication;
-
+        private string[] extentions = new string[] { "jpg", "png","jpeg" };
         public UserController(IUserApplication userApplication)
         {
             _userApplication = userApplication;
@@ -38,6 +38,19 @@ namespace BackEndAdminPro.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+        [HttpPut("Image/{id}")]
+        public async Task<IActionResult> UpdateImage(int id, IFormFile file)
+        {
+            var extension = Path.GetExtension(file.FileName);
+            if (!extension.Contains(extension)) return BadRequest("Image error");
+            if (file.Length <= 0) return BadRequest("File error");
+            
+            var user = await _userApplication.GetByIdAsync(id);
+            user.Image = ToByteService.convertImage(file);
+            _userApplication.Save(user);
+            var memoryStream = ImageService.decodeImage(user.Image);
+            return Ok(memoryStream);
         }
 
         [HttpPut("{id}")]

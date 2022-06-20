@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.AuthServices;
 using Services.UserServices;
+using System.Text;
 
 namespace BackEndAdminPro.Controllers
 {
@@ -39,7 +40,7 @@ namespace BackEndAdminPro.Controllers
 
                 User u = UserService.ConvertDTO(user);
                 u.Role = "User";
-                u.Image = "";
+                u.Image = Encoding.ASCII.GetBytes("");
                 var parameters = new TokenParameters()
                 {
                     Id = u.Id.ToString(),
@@ -67,30 +68,39 @@ namespace BackEndAdminPro.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO dto)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
-
-            var userFound = await _userApplication.LoginAsync(dto.Email, EncriptadoService.ComputeSha256Hash(dto.Password));
-
-            if (userFound == null) return BadRequest(new LoginResponseDTO
+            try
             {
-                Login = false,
-                Error = "Invalid email or password"
-            });
+                if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var parameters = new TokenParameters()
+                var userFound = await _userApplication.LoginAsync(dto.Email, EncriptadoService.ComputeSha256Hash(dto.Password));
+
+                if (userFound == null) return BadRequest(new LoginResponseDTO
+                {
+                    Login = false,
+                    Error = "Invalid email or password"
+                });
+
+                var parameters = new TokenParameters()
+                {
+                    Id = userFound.Id.ToString(),
+                    PasswordHash = userFound.Password,
+                    Email = userFound.Email,
+                };
+
+                var jwtToken = _tokenService.GenerateToken(parameters);
+
+                return Ok(new LoginResponseDTO
+                {
+                    Login = true,
+                    Token = jwtToken,
+                    User = userFound
+                });
+            }
+            catch (Exception ex)
             {
-                Id = userFound.Id.ToString(),
-                PasswordHash = userFound.Password,
-                Email = userFound.Email,
-            };
-
-            var jwtToken = _tokenService.GenerateToken(parameters);
-
-            return Ok(new LoginResponseDTO
-            {
-                Login = true,
-                Token = jwtToken,
-            });
+                throw;
+            }
+            
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

@@ -11,5 +11,6 @@ namespace Entities.DTOs
         public string Token { get; set; }
         public bool Login { get; set; }
         public string Error { get; set; }
+        public User User { get; set; }
     }
 }

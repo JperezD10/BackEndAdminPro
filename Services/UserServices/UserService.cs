@@ -19,7 +19,6 @@ namespace Services.UserServices
                 Password = EncriptadoService.ComputeSha256Hash(dto.Password),
                 Google = dto.Google,
                 Role = dto.Role,
-                Image = dto.Image,
             };
         }
     }

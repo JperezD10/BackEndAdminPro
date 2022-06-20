@@ -20,8 +20,6 @@ namespace Entities.DTOs
         [Required]
         public string Password { get; set; }
 
-        public string Image { get; set; }
-
         [Required]
         public string Role { get; set; }
 

@@ -16,7 +16,7 @@ namespace Entities
         [Required]
         public string Password { get; set; }
 
-        public string Image { get; set; }
+        public byte[] Image { get; set; }
 
         [Required]
         [DefaultValue("")]
